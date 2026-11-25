@@ -1,0 +1,624 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<style>:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
+<title>AX 튜터링 쇼케이스</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Black+Han+Sans&family=IBM+Plex+Sans+KR:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700;800&display=swap">
+<style>
+/* 레이아웃: 어두운 무대 위에 회차마다 그 작품의 색 조명이 켜지는 쇼케이스. 배경엔 거대한 날짜, 앞엔 빛나는 화면. 한 가지 어두운 무대로만 디자인. */
+:root {
+  --bg: #0A0A12;
+  --bg2: #12121F;
+  --ink: #F4F5FB;
+  --muted: #A3A7C2;
+  --line: rgba(255, 255, 255, 0.12);
+  --glass: rgba(255, 255, 255, 0.06);
+  --c-rush: #FF6B2C; --c-rush2: #FFD23F;
+  --c-arena: #39D98A; --c-arena2: #4DA3FF;
+  --c-char: #FF8FB8; --c-char2: #7CC8FF; --c-char3: #FFD66B;
+  --c-bass: #FF4D8D; --c-bass2: #C98A5A;
+  --c-herm: #A06BFF; --c-herm2: #3DDC97;
+  --display: "Black Han Sans", "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
+  --body: "IBM Plex Sans KR", "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
+  --mono: "JetBrains Mono", ui-monospace, "SF Mono", Menlo, monospace;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; background: var(--bg); }
+body { background: var(--bg); color: var(--ink); font-family: var(--body); font-size: 18px; line-height: 1.5; word-break: keep-all; overflow-wrap: anywhere; overflow-x: clip; }
+h1, h2, p, ul, ol, figure { margin: 0; }
+ul, ol { padding: 0; list-style: none; }
+a { color: inherit; }
+a:focus-visible, button:focus-visible { outline: 2px solid var(--c1, #fff); outline-offset: 4px; }
+
+/* 맨 위 진행 막대 */
+.progress { position: fixed; z-index: 30; top: 0; left: 0; right: 0; height: calc(4px + env(safe-area-inset-top, 0px)); padding-top: env(safe-area-inset-top, 0px); pointer-events: none; }
+.progress i { display: block; height: 4px; width: 0; background: linear-gradient(90deg, var(--c-rush), var(--c-rush2), var(--c-arena), var(--c-arena2), var(--c-char), var(--c-herm)); box-shadow: 0 0 14px rgba(255, 140, 80, 0.7); transition: width .25s; }
+
+/* 슬라이드 공통 */
+.slide {
+  position: relative; overflow: hidden; isolation: isolate;
+  padding-block: 64px 88px;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  display: flex; align-items: center;
+  background:
+    radial-gradient(60% 70% at 85% 30%, color-mix(in srgb, var(--c1, #555) 30%, transparent), transparent 70%),
+    radial-gradient(50% 60% at 10% 90%, color-mix(in srgb, var(--c2, #333) 22%, transparent), transparent 70%),
+    var(--bg);
+}
+.slide::after { /* 잔잔한 격자 */
+  content: ""; position: absolute; inset: 0; z-index: -1; pointer-events: none;
+  background-image: linear-gradient(var(--line) 1px, transparent 1px), linear-gradient(90deg, var(--line) 1px, transparent 1px);
+  background-size: 56px 56px; opacity: .35;
+  mask-image: radial-gradient(70% 70% at 50% 50%, #000 30%, transparent 80%);
+}
+.inner { position: relative; width: 100%; max-width: 1380px; margin-inline: auto; display: grid; gap: 32px; }
+.two { grid-template-columns: minmax(0, 1fr); }
+.two > * { min-width: 0; }
+.copy { display: grid; gap: 22px; align-content: start; }
+
+.bigdate {
+  position: absolute; z-index: -1; right: -2vw; bottom: -4vw; pointer-events: none;
+  font-family: var(--mono); font-weight: 800; font-size: clamp(7rem, 26vw, 24rem); line-height: .8; letter-spacing: -0.06em;
+  color: transparent; -webkit-text-stroke: 2px color-mix(in srgb, var(--c1) 45%, transparent);
+  opacity: .75;
+}
+.tag { font-family: var(--mono); font-weight: 700; font-size: 1rem; letter-spacing: .04em; color: var(--c1); display: flex; gap: 12px; align-items: center; flex-wrap: wrap; }
+.tag span { color: var(--bg); background: linear-gradient(135deg, var(--c1), var(--c2)); padding: 3px 10px; border-radius: 6px; }
+.title {
+  font-family: var(--display); font-weight: 400; font-size: clamp(3rem, 7.4vw, 6.6rem); line-height: 1.02; letter-spacing: -0.01em; text-wrap: balance;
+  background: linear-gradient(100deg, var(--ink) 20%, var(--c1) 50%, var(--c2) 70%, var(--ink) 95%);
+  background-size: 250% 100%; background-position: 100% 0;
+  -webkit-background-clip: text; background-clip: text; color: transparent;
+  filter: drop-shadow(0 6px 30px color-mix(in srgb, var(--c1) 35%, transparent));
+}
+.lead { font-size: clamp(1.2rem, 2.2vw, 1.6rem); color: var(--muted); font-weight: 500; line-height: 1.4; }
+.points { display: grid; gap: 10px; font-size: clamp(1.1rem, 1.8vw, 1.3rem); }
+.points li { display: flex; gap: 12px; align-items: baseline; }
+.points li::before { content: ""; flex: none; width: 10px; height: 10px; transform: translateY(-2px) rotate(45deg); background: linear-gradient(135deg, var(--c1), var(--c2)); box-shadow: 0 0 12px var(--c1); }
+.points b { color: var(--c1); }
+
+.stats { display: flex; flex-wrap: wrap; gap: 14px; }
+.stat { min-width: 120px; padding: 12px 18px 14px; border-radius: 16px; background: var(--glass); border: 1px solid var(--line); backdrop-filter: blur(6px); display: grid; gap: 2px; }
+.stat b { font-family: var(--mono); font-weight: 800; font-size: clamp(2rem, 3.6vw, 2.8rem); line-height: 1; font-variant-numeric: tabular-nums; background: linear-gradient(135deg, var(--c1), var(--c2)); -webkit-background-clip: text; background-clip: text; color: transparent; }
+.stat b small { font-size: .5em; margin-left: 2px; }
+.stat span { font-size: .9rem; color: var(--muted); }
+
+.chips { display: flex; flex-wrap: wrap; gap: 8px; }
+.chips li { font-size: 1rem; font-weight: 600; padding: 6px 14px; border-radius: 999px; border: 1px solid color-mix(in srgb, var(--k) 60%, transparent); color: var(--k); background: color-mix(in srgb, var(--k) 12%, transparent); }
+.links a { font-family: var(--mono); font-weight: 700; font-size: .95rem; text-decoration: none; padding: 10px 18px; border-radius: 999px; display: inline-block; color: var(--bg); background: linear-gradient(135deg, var(--c1), var(--c2)); box-shadow: 0 8px 30px -8px var(--c1); transition: transform .2s; }
+.links a:hover { transform: translateY(-2px); }
+
+/* 빛나는 화면 틀 + 기울기 */
+.frame { position: relative; perspective: 1400px; }
+.frame .glow { position: absolute; inset: 8% 6%; z-index: -1; background: linear-gradient(135deg, var(--c1), var(--c2)); filter: blur(60px); opacity: .55; border-radius: 40px; }
+.screen {
+  position: relative; border-radius: 18px; padding: 3px; transform-style: preserve-3d;
+  background: linear-gradient(135deg, var(--c1), var(--c2), var(--c1));
+  background-size: 200% 200%;
+  box-shadow: 0 40px 80px -30px rgba(0, 0, 0, .8);
+  transition: transform .4s cubic-bezier(.2, .7, .2, 1);
+  transform: rotateY(var(--ry, -6deg)) rotateX(var(--rx, 3deg));
+}
+.screen video, .screen .stage { display: block; width: 100%; max-width: 100%; height: auto; aspect-ratio: 16 / 9; object-fit: cover; border-radius: 15px; background: #000; }
+.screen .bar { position: absolute; top: 12px; left: 14px; display: flex; gap: 6px; z-index: 2; }
+.screen .bar i { width: 10px; height: 10px; border-radius: 50%; background: rgba(255, 255, 255, .55); }
+.rec { position: absolute; top: 12px; right: 14px; z-index: 2; font-family: var(--mono); font-size: .75rem; font-weight: 700; color: #fff; background: rgba(0, 0, 0, .55); padding: 3px 9px; border-radius: 999px; display: flex; gap: 6px; align-items: center; }
+.rec::before { content: ""; width: 8px; height: 8px; border-radius: 50%; background: #FF3B4E; box-shadow: 0 0 8px #FF3B4E; animation: pulse 1.2s infinite; }
+@keyframes pulse { 50% { opacity: .25; } }
+
+/* 표지 */
+.cover { --c1: var(--c-rush); --c2: var(--c-herm); text-align: left; }
+.cover canvas { position: absolute; inset: 0; z-index: -1; width: 100%; height: 100%; }
+.cover h1 { font-family: var(--display); font-weight: 400; font-size: clamp(3.2rem, 10vw, 9rem); line-height: 1; letter-spacing: -0.01em; }
+.cover h1 .grad {
+  background: linear-gradient(90deg, var(--c-rush), var(--c-rush2), var(--c-arena), var(--c-arena2), var(--c-char), var(--c-herm), var(--c-rush));
+  background-size: 300% 100%; -webkit-background-clip: text; background-clip: text; color: transparent;
+  animation: flow 8s linear infinite;
+}
+@keyframes flow { to { background-position: 300% 0; } }
+.cover .tagline { font-size: clamp(1.2rem, 2.4vw, 1.7rem); color: var(--muted); font-weight: 500; }
+.badge { justify-self: start; font-family: var(--mono); font-weight: 700; font-size: .95rem; padding: 8px 16px; border-radius: 999px; border: 1px solid var(--line); background: var(--glass); backdrop-filter: blur(6px); }
+.marquee { position: absolute; left: 0; right: 0; bottom: 0; overflow: hidden; border-top: 1px solid var(--line); background: rgba(0, 0, 0, .35); padding-block: 12px; }
+.marquee div { display: flex; width: max-content; gap: 40px; font-family: var(--mono); font-weight: 800; font-size: 1.05rem; letter-spacing: .12em; animation: slide 28s linear infinite; }
+.marquee span:nth-child(5n+1) { color: var(--c-rush); } .marquee span:nth-child(5n+2) { color: var(--c-arena); }
+.marquee span:nth-child(5n+3) { color: var(--c-char); } .marquee span:nth-child(5n+4) { color: var(--c-bass); } .marquee span:nth-child(5n+5) { color: var(--c-herm); }
+@keyframes slide { to { transform: translateX(-50%); } }
+.hint { font-family: var(--mono); font-size: .9rem; color: var(--muted); }
+kbd { font-family: var(--mono); border: 1px solid var(--line); background: var(--glass); padding: 2px 8px; border-radius: 6px; }
+
+/* 한눈에: 다섯 장 카드 */
+.overview { --c1: var(--c-arena2); --c2: var(--c-char); }
+.overview h2 { font-family: var(--display); font-weight: 400; font-size: clamp(2.6rem, 6vw, 5rem); line-height: 1.05; }
+.cards { display: grid; gap: 16px; grid-template-columns: repeat(auto-fit, minmax(min(100%, 210px), 1fr)); }
+.card { --k: #fff; position: relative; display: grid; gap: 0; text-decoration: none; border-radius: 18px; overflow: hidden; background: var(--bg2); border: 1px solid color-mix(in srgb, var(--k) 40%, transparent); transition: transform .3s, box-shadow .3s; }
+.card:hover { transform: translateY(-6px) rotate(-.6deg); box-shadow: 0 24px 50px -20px var(--k); }
+.card .th { aspect-ratio: 16 / 10; background: color-mix(in srgb, var(--k) 25%, #000) center / cover no-repeat; position: relative; }
+.card .n { position: absolute; top: 10px; left: 12px; font-family: var(--mono); font-weight: 800; font-size: .85rem; color: #000; background: var(--k); padding: 2px 8px; border-radius: 6px; }
+.card .tx { padding: 14px 16px 18px; display: grid; gap: 2px; }
+.card .d { font-family: var(--mono); font-weight: 700; font-size: .85rem; color: var(--k); }
+.card .t { font-family: var(--display); font-size: 1.55rem; line-height: 1.15; }
+.card .k { font-size: .95rem; color: var(--muted); }
+.mini-term { position: absolute; inset: 14% 10%; border-radius: 8px; background: #07070D; border: 1px solid rgba(255,255,255,.15); font-family: var(--mono); font-size: .7rem; color: var(--c-herm2); padding: 10px; line-height: 1.6; }
+.mini-term b { color: var(--c-herm); }
+
+/* 3D 무대 */
+.stage { position: relative; aspect-ratio: 4 / 5 !important; max-height: 76vh; overflow: hidden; touch-action: pan-y; cursor: grab; background: radial-gradient(70% 60% at 50% 40%, #3A1428, #12060D) !important; }
+.stage canvas { display: block; width: 100%; height: 100%; }
+.stage .fallback { position: absolute; inset: 0; display: grid; place-items: center; padding: 16px; }
+.stage .fallback[hidden] { display: none; }
+.stage .fallback img { max-width: 100%; max-height: 100%; width: auto; height: auto; object-fit: contain; }
+.pipe { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; font-family: var(--mono); font-weight: 700; font-size: .95rem; }
+.pipe span { padding: 6px 12px; border-radius: 10px; background: var(--glass); border: 1px solid var(--line); }
+.pipe em { font-style: normal; color: var(--c1); }
+
+/* Hermes 데모 */
+.demo { display: grid; gap: 18px; }
+.term { border-radius: 16px; background: #07070D; border: 1px solid rgba(255,255,255,.14); overflow: hidden; box-shadow: 0 30px 80px -30px var(--c1); }
+.term .top { display: flex; gap: 7px; align-items: center; padding: 11px 14px; background: rgba(255,255,255,.05); border-bottom: 1px solid rgba(255,255,255,.08); font-family: var(--mono); font-size: .8rem; color: var(--muted); }
+.term .top i { width: 11px; height: 11px; border-radius: 50%; }
+.term .top i:nth-child(1) { background: #FF5F57; } .term .top i:nth-child(2) { background: #FEBC2E; } .term .top i:nth-child(3) { background: #28C840; }
+.term .top span { margin-left: 8px; }
+.term pre { margin: 0; padding: 18px 20px; min-height: 11.5em; overflow-x: auto; font-family: var(--mono); font-size: clamp(.85rem, 1.35vw, 1.05rem); line-height: 1.75; color: #DCE3F5; white-space: pre; }
+.term .c { color: #7783A6; } .term .p { color: var(--c-herm); font-weight: 800; } .term .ok { color: var(--c-herm2); font-weight: 700; }
+.term .cur { display: inline-block; width: .6em; height: 1.1em; vertical-align: -.2em; background: var(--c-herm2); box-shadow: 0 0 10px var(--c-herm2); animation: pulse 1s steps(1) infinite; }
+.phone { justify-self: end; width: min(100%, 360px); border-radius: 26px; padding: 16px; background: linear-gradient(180deg, #17212B, #0E1621); border: 1px solid rgba(255,255,255,.12); display: grid; gap: 10px; min-height: 9.5em; align-content: start; }
+.phone .who { font-size: .8rem; color: #8BA0B5; font-family: var(--mono); text-align: center; }
+.phone div.m { max-width: 82%; padding: 9px 14px; border-radius: 16px; font-size: 1.1rem; transition: opacity .35s, transform .35s cubic-bezier(.2,.9,.3,1.4); }
+.phone .me { justify-self: end; background: #2B5278; color: #fff; border-bottom-right-radius: 4px; }
+.phone .bot { justify-self: start; background: #182533; color: #fff; border-bottom-left-radius: 4px; }
+.phone small { font-family: var(--mono); font-size: .72rem; color: var(--c-herm2); margin-left: 8px; }
+.phone .off { opacity: 0; transform: translateY(10px) scale(.9); }
+
+/* 마무리 */
+.wrap { --c1: var(--c-char); --c2: var(--c-rush2); }
+.wrap h2 { font-family: var(--display); font-weight: 400; font-size: clamp(2.6rem, 7vw, 6rem); line-height: 1.05; }
+.wrap h2 em { font-style: normal; background: linear-gradient(90deg, var(--c-rush), var(--c-char), var(--c-herm)); -webkit-background-clip: text; background-clip: text; color: transparent; }
+.learn { display: grid; gap: 16px; grid-template-columns: repeat(auto-fit, minmax(min(100%, 260px), 1fr)); }
+.learn div { --k: #fff; border-radius: 20px; padding: 22px 22px 24px; background: linear-gradient(160deg, color-mix(in srgb, var(--k) 22%, transparent), transparent 70%), var(--bg2); border: 1px solid color-mix(in srgb, var(--k) 40%, transparent); display: grid; gap: 8px; }
+.learn b { font-family: var(--display); font-weight: 400; font-size: clamp(1.6rem, 2.6vw, 2.1rem); color: var(--k); }
+.learn p { color: var(--muted); font-size: 1.1rem; }
+.thanks { font-family: var(--display); font-size: clamp(2.2rem, 6vw, 4.4rem); color: transparent; -webkit-text-stroke: 1.5px var(--ink); opacity: .85; }
+
+/* 넘김 버튼 */
+.pager { position: fixed; z-index: 30; right: calc(16px + env(safe-area-inset-right, 0px)); bottom: calc(16px + env(safe-area-inset-bottom, 0px)); display: flex; align-items: center; gap: 2px; padding: 4px; border-radius: 999px; background: rgba(18, 18, 31, .8); border: 1px solid var(--line); backdrop-filter: blur(10px); font-family: var(--mono); font-size: .85rem; font-variant-numeric: tabular-nums; }
+.pager button { all: unset; cursor: pointer; width: 38px; height: 38px; display: grid; place-items: center; border-radius: 50%; color: var(--ink); font-size: 1.05rem; }
+.pager button:hover { background: rgba(255,255,255,.1); }
+.pager button:focus-visible { outline: 2px solid #fff; }
+.pager output { padding-inline: 8px; color: var(--muted); }
+
+/* 들어올 때 움직임 (화면에 들어온 순간 시작) */
+.go .title { animation: shine 1.6s cubic-bezier(.3,.7,.2,1) both; }
+@keyframes shine { from { background-position: 0 0; } to { background-position: 100% 0; } }
+.go .rise { animation: rise .8s cubic-bezier(.2,.8,.2,1) both; animation-delay: calc(var(--i, 0) * 90ms); }
+@keyframes rise { from { transform: translateY(26px); opacity: .0; } }
+.go .bigdate { animation: drift 1.4s cubic-bezier(.2,.8,.2,1) both; }
+@keyframes drift { from { transform: translateX(8%); opacity: 0; } }
+.go .screen { animation: swing 1.1s cubic-bezier(.2,.8,.2,1) both; }
+@keyframes swing { from { transform: rotateY(-22deg) rotateX(8deg) translateY(30px); } }
+
+@media (min-width: 980px) {
+  body { font-size: 20px; }
+  .two { grid-template-columns: minmax(0, 5fr) minmax(0, 8fr); gap: 64px; align-items: center; }
+  .two.bass { grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); }
+}
+@media (min-width: 980px) and (min-height: 640px) {
+  html { scroll-snap-type: y proximity; }
+  .slide { min-height: 100svh; scroll-snap-align: start; }
+}
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before { animation: none !important; transition: none !important; }
+  .screen { transform: none; }
+}
+</style>
+</head>
+<body>
+
+
+<div class="progress" aria-hidden="true"><i id="prog"></i></div>
+
+<section class="slide cover" id="cover">
+  <canvas id="blocks" aria-hidden="true"></canvas>
+  <div class="inner">
+    <p class="badge rise">2026-2학기 한성 AX 융합튜터링 · 팀 AAA</p>
+    <h1 class="rise" style="--i:1">매주 하나씩<br><span class="grad">Claude Code</span>로<br>만든 것들</h1>
+    <p class="tagline rise" style="--i:2">10.16 – 11.18 · 다섯 번의 작업</p>
+    <p class="hint rise" style="--i:3"><kbd>←</kbd> <kbd>→</kbd> 로 넘기기</p>
+  </div>
+  <div class="marquee" aria-hidden="true"><div>
+    <span>RUSH LINE</span><span>BLOCK ARENA</span><span>CHIIKAWA SQUAD</span><span>PEPERO BASS</span><span>HERMES AGENT</span>
+    <span>RUSH LINE</span><span>BLOCK ARENA</span><span>CHIIKAWA SQUAD</span><span>PEPERO BASS</span><span>HERMES AGENT</span>
+  </div></div>
+</section>
+
+<section class="slide overview" id="overview">
+  <div class="inner">
+    <h2 class="rise">다섯 번, 다섯 가지</h2>
+    <div class="cards">
+      <a class="card rise" style="--k:var(--c-rush);--i:1" href="#rush-line"><div class="th" style="background-image:url(rush-poster.jpg)"><span class="n">01</span></div><div class="tx"><span class="d">10.16</span><span class="t">Rush Line</span><span class="k">레이싱 게임</span></div></a>
+      <a class="card rise" style="--k:var(--c-arena);--i:2" href="#block-arena"><div class="th" style="background-image:url(arena-poster.jpg)"><span class="n">02</span></div><div class="tx"><span class="d">10.30</span><span class="t">블록 아레나</span><span class="k">3D FPS 멀티</span></div></a>
+      <a class="card rise" style="--k:var(--c-char);--i:3" href="#characters"><div class="th" style="background-image:url(characters-poster.jpg)"><span class="n">03</span></div><div class="tx"><span class="d">11.06</span><span class="t">친구 게임과 합치기</span><span class="k">캐릭터 시스템</span></div></a>
+      <a class="card rise" style="--k:var(--c-bass);--i:4" href="#pepero-bass"><div class="th" style="background-image:url(plate.png);background-size:contain;background-color:#2A0E1C"><span class="n">04</span></div><div class="tx"><span class="d">11.11</span><span class="t">빼빼로 베이스기타</span><span class="k">3D 프린팅</span></div></a>
+      <a class="card rise" style="--k:var(--c-herm);--i:5" href="#hermes"><div class="th"><div class="mini-term"><b>$</b> hermes gateway<br>✓ telegram running</div><span class="n">05</span></div><div class="tx"><span class="d">11.18</span><span class="t">Hermes Agent</span><span class="k">AI 비서</span></div></a>
+    </div>
+  </div>
+</section>
+
+<section class="slide" id="rush-line" style="--c1:var(--c-rush);--c2:var(--c-rush2)">
+  <div class="bigdate" aria-hidden="true">10.16</div>
+  <div class="inner two">
+    <div class="copy">
+      <p class="tag rise"><span>01</span> 레이싱 게임</p>
+      <h2 class="title">Rush Line</h2>
+      <p class="lead rise" style="--i:1">브라우저 레이싱 게임 · 파일 하나, 설치 없음</p>
+      <div class="stats rise" style="--i:2">
+        <div class="stat"><b data-to="21">21<small>분</small></b><span>완성까지</span></div>
+        <div class="stat"><b data-to="5">5<small>종</small></b><span>아이템</span></div>
+      </div>
+      <ul class="chips rise" style="--i:3" aria-label="아이템">
+        <li style="--k:#FFD23F">부스터</li><li style="--k:#5BE37D">점프</li><li style="--k:#5AB0FF">무적</li><li style="--k:#FF5A5A">장애물 제거</li><li style="--k:#B57BFF">타임 스톱</li>
+      </ul>
+      <p class="links rise" style="--i:4"><a href="https://2junewoo.github.io/project_ax/">직접 달려 보기 ↗</a></p>
+    </div>
+    <div class="frame"><div class="glow"></div><div class="screen">
+      <span class="rec">PLAY</span>
+      <video src="rush.mp4" poster="rush-poster.jpg" muted loop playsinline preload="auto" aria-label="Rush Line 주행 영상. 차를 피하고 아이템을 먹어 사용한다."></video>
+    </div></div>
+  </div>
+</section>
+
+<section class="slide" id="block-arena" style="--c1:var(--c-arena);--c2:var(--c-arena2)">
+  <div class="bigdate" aria-hidden="true">10.30</div>
+  <div class="inner two">
+    <div class="copy">
+      <p class="tag rise"><span>02</span> 웹 3D FPS</p>
+      <h2 class="title">블록 아레나</h2>
+      <p class="lead rise" style="--i:1">PC와 폰이 같은 방에서 싸우는 멀티플레이</p>
+      <div class="stats rise" style="--i:2">
+        <div class="stat"><b data-to="4">4<small>시간</small></b><span>하루 만에</span></div>
+        <div class="stat"><b data-to="5">5<small>명</small></b><span>한 방 최대</span></div>
+      </div>
+      <ul class="points rise" style="--i:3">
+        <li><span><b>망령</b> · 죽어도 블록을 놓으며 계속 참여</span></li>
+        <li><span><b>규칙 카드</b> · 먼저 죽은 사람이 다음 규칙 선택</span></li>
+      </ul>
+      <p class="links rise" style="--i:4"><a href="https://github.com/2junewoo/block-arena">2junewoo/block-arena ↗</a></p>
+    </div>
+    <div class="frame"><div class="glow"></div><div class="screen">
+      <span class="rec">LIVE MATCH</span>
+      <video src="arena.mp4" poster="arena-poster.jpg" muted loop playsinline preload="auto" aria-label="블록 아레나 경기 영상. 라운드 시작, 교전, 죽은 뒤 망령으로 날아다니기, 라운드 승리 뒤 규칙 카드 고르기."></video>
+    </div></div>
+  </div>
+</section>
+
+<section class="slide" id="characters" style="--c1:var(--c-char);--c2:var(--c-char2)">
+  <div class="bigdate" aria-hidden="true">11.06</div>
+  <div class="inner two">
+    <div class="copy">
+      <p class="tag rise"><span>03</span> 친구 게임 + 블록 아레나</p>
+      <h2 class="title">친구 게임과 합치기</h2>
+      <p class="lead rise" style="--i:1">친구의 project_fps와 비교해 좋은 쪽을 가져왔습니다</p>
+      <div class="stats rise" style="--i:2">
+        <div class="stat"><b data-to="3">3</b><span>캐릭터</span></div>
+        <div class="stat"><b data-to="3">3<small>시간</small></b><span>비교·합치기</span></div>
+      </div>
+      <ul class="chips rise" style="--i:3" aria-label="캐릭터">
+        <li style="--k:#FF8FB8">치이카와 · 밸런스</li><li style="--k:#7CC8FF">하치와레 · 돌격</li><li style="--k:#FFD66B">우사기 · 기동</li>
+      </ul>
+      <ul class="points rise" style="--i:4"><li><span>무기 상점 → 캐릭터마다 <b>무기·스킬</b></span></li></ul>
+    </div>
+    <div class="frame"><div class="glow"></div><div class="screen">
+      <span class="rec">CHARACTER</span>
+      <video src="characters.mp4" poster="characters-poster.jpg" muted loop playsinline preload="auto" aria-label="준비 시간에 캐릭터를 바꾸고, 치이카와 캐릭터들과 교전하는 영상."></video>
+    </div></div>
+  </div>
+</section>
+
+<section class="slide" id="pepero-bass" style="--c1:var(--c-bass);--c2:var(--c-bass2)">
+  <div class="bigdate" aria-hidden="true">11.11</div>
+  <div class="inner two bass">
+    <div class="copy">
+      <p class="tag rise"><span>04</span> 빼빼로데이 3D 프린팅</p>
+      <h2 class="title">빼빼로 베이스기타</h2>
+      <p class="lead rise" style="--i:1">마우스 없이 말로 모델링하고 학교 3D 프린터로 출력</p>
+      <div class="stats rise" style="--i:2">
+        <div class="stat"><b data-to="23">23</b><span>STL 파일</span></div>
+        <div class="stat"><b data-to="3">3</b><span>빼빼로 종류</span></div>
+      </div>
+      <div class="pipe rise" style="--i:3"><span>Claude Code</span><em>▶</em><span>Blender</span><em>▶</em><span>STL</span><em>▶</em><span>X1C 출력</span></div>
+      <p class="links rise" style="--i:4"><a href="https://github.com/2junewoo/project_ax_1111">2junewoo/project_ax_1111 ↗</a></p>
+    </div>
+    <div class="frame"><div class="glow"></div><div class="screen" style="--ry:0deg;--rx:0deg">
+      <span class="rec">3D · 끌어서 돌리기</span>
+      <div class="stage" id="stage">
+        <div class="fallback" id="stage-fallback"><img src="plate.png" alt="출력 판 위에 놓인 베이스 넥, 하트 바디, 빼빼로 세 개" width="512" height="512"></div>
+      </div>
+    </div></div>
+  </div>
+</section>
+
+<section class="slide" id="hermes" style="--c1:var(--c-herm);--c2:var(--c-herm2)">
+  <div class="bigdate" aria-hidden="true">11.18</div>
+  <div class="inner two">
+    <div class="copy">
+      <p class="tag rise"><span>05</span> 오픈소스 AI 에이전트</p>
+      <h2 class="title">Hermes Agent</h2>
+      <p class="lead rise" style="--i:1">폰 텔레그램으로 부르는 내 맥의 AI 비서</p>
+      <div class="stats rise" style="--i:2">
+        <div class="stat"><b data-to="58">58<small>분</small></b><span>설치부터 연결까지</span></div>
+        <div class="stat"><b data-to="4.5">4.5<small>초</small></b><span>첫 답장</span></div>
+      </div>
+      <ul class="points rise" style="--i:3">
+        <li><span>설치 스크립트는 <b>읽고 나서</b> 실행</span></li>
+        <li><span><b>내 텔레그램 ID</b>에만 답함</span></li>
+      </ul>
+    </div>
+    <div class="demo" id="demo" aria-label="설치 명령이 입력되고 텔레그램으로 인사하면 4.5초 뒤 답장이 오는 장면">
+      <div class="term"><div class="top"><i></i><i></i><i></i><span>~ — zsh</span></div><pre id="term"></pre></div>
+      <div class="phone">
+        <p class="who">Telegram · hermes bot</p>
+        <div class="m me off" id="msg-me">안녕</div>
+        <div class="m bot off" id="msg-bot">답장 도착 <small>4.5초</small></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="slide wrap" id="wrap">
+  <div class="inner">
+    <h2 class="rise">만드는 법보다<br><em>시키는 법</em>을 배웠습니다</h2>
+    <div class="learn">
+      <div class="rise" style="--k:var(--c-arena);--i:1"><b>작게 시작해 쌓기</b><p>한 단계가 돌아가면 다음 단계</p></div>
+      <div class="rise" style="--k:var(--c-bass);--i:2"><b>코드 밖 도구까지</b><p>Blender · GitHub · 텔레그램</p></div>
+      <div class="rise" style="--k:var(--c-herm);--i:3"><b>실행 전에 읽기</b><p>스크립트 확인, 권한은 좁게</p></div>
+    </div>
+    <p class="thanks rise" style="--i:4">감사합니다</p>
+  </div>
+</section>
+
+<nav class="pager" aria-label="슬라이드 넘기기">
+  <button type="button" id="prev" aria-label="이전">←</button>
+  <output id="count">1 / 8</output>
+  <button type="button" id="next" aria-label="다음">→</button>
+</nav>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script>
+var still = matchMedia('(prefers-reduced-motion: reduce)').matches;
+var fine = matchMedia('(pointer: fine)').matches;
+
+/* 넘기기 + 진행 막대 + 들어올 때 움직임 */
+(function () {
+  var slides = Array.prototype.slice.call(document.querySelectorAll('.slide'));
+  var count = document.getElementById('count'), prog = document.getElementById('prog');
+  function nearest() {
+    var best = 0, bd = Infinity;
+    slides.forEach(function (s, i) { var d = Math.abs(s.getBoundingClientRect().top); if (d < bd) { bd = d; best = i; } });
+    return best;
+  }
+  function show() {
+    count.textContent = (nearest() + 1) + ' / ' + slides.length;
+    var max = document.documentElement.scrollHeight - innerHeight;
+    prog.style.width = (max > 0 ? scrollY / max * 100 : 0) + '%';
+  }
+  function go(d) { slides[Math.max(0, Math.min(slides.length - 1, nearest() + d))].scrollIntoView({ block: 'start' }); }
+  document.getElementById('prev').addEventListener('click', function () { go(-1); });
+  document.getElementById('next').addEventListener('click', function () { go(1); });
+  addEventListener('keydown', function (e) {
+    if (e.metaKey || e.ctrlKey || e.altKey) return;
+    if (e.key === 'ArrowRight' || e.key === 'PageDown') { e.preventDefault(); go(1); }
+    else if (e.key === 'ArrowLeft' || e.key === 'PageUp') { e.preventDefault(); go(-1); }
+  });
+  var tick = false;
+  addEventListener('scroll', function () { if (tick) return; tick = true; requestAnimationFrame(function () { tick = false; show(); }); }, { passive: true });
+  addEventListener('resize', show);
+  show();
+  if (still || !('IntersectionObserver' in window)) return;
+  var io = new IntersectionObserver(function (es) {
+    es.forEach(function (e) {
+      if (!e.isIntersecting) return;
+      e.target.classList.add('go');
+      countUp(e.target);
+      io.unobserve(e.target);
+    });
+  }, { threshold: 0.18 });
+  slides.forEach(function (s) { if (s.getBoundingClientRect().top > innerHeight * 0.6) io.observe(s); });
+})();
+
+/* 숫자 올라가기 */
+function countUp(root) {
+  root.querySelectorAll('[data-to]').forEach(function (b) {
+    var to = parseFloat(b.dataset.to), dec = (b.dataset.to.split('.')[1] || '').length;
+    var unit = b.querySelector('small'), unitHTML = unit ? unit.outerHTML : '';
+    var t0 = performance.now(), dur = 1100;
+    (function step(now) {
+      var p = Math.min(1, (now - t0) / dur), e = 1 - Math.pow(1 - p, 3);
+      b.innerHTML = (to * e).toFixed(dec) + unitHTML;
+      if (p < 1) requestAnimationFrame(step);
+    })(t0);
+  });
+}
+
+/* 화면 기울기: 마우스를 따라 */
+(function () {
+  if (still || !fine) return;
+  document.querySelectorAll('.frame').forEach(function (f) {
+    var s = f.querySelector('.screen');
+    if (s.querySelector('.stage')) return;
+    f.addEventListener('pointermove', function (e) {
+      var r = f.getBoundingClientRect(), x = (e.clientX - r.left) / r.width - 0.5, y = (e.clientY - r.top) / r.height - 0.5;
+      s.style.setProperty('--ry', (x * 14) + 'deg'); s.style.setProperty('--rx', (-y * 10) + 'deg');
+    });
+    f.addEventListener('pointerleave', function () { s.style.removeProperty('--ry'); s.style.removeProperty('--rx'); });
+  });
+})();
+
+/* 영상: 보일 때만 재생 */
+(function () {
+  var vids = document.querySelectorAll('.screen video');
+  if (still) { vids.forEach(function (v) { v.controls = true; }); return; }
+  if (!('IntersectionObserver' in window)) { vids.forEach(function (v) { v.play().catch(function () {}); }); return; }
+  var io = new IntersectionObserver(function (es) {
+    es.forEach(function (e) {
+      if (e.isIntersecting) { e.target.currentTime = 0; var p = e.target.play(); if (p) p.catch(function () { e.target.controls = true; }); }
+      else e.target.pause();
+    });
+  }, { threshold: 0.4 });
+  vids.forEach(function (v) { io.observe(v); });
+})();
+
+/* 표지: 떠다니는 블록 */
+(function () {
+  var cv = document.getElementById('blocks'), ctx = cv.getContext('2d');
+  var cols = ['#FF6B2C', '#FFD23F', '#39D98A', '#4DA3FF', '#FF8FB8', '#A06BFF', '#3DDC97'];
+  var W, H, dpr, bl = [], mx = 0, my = 0, vis = true;
+  function size() {
+    dpr = Math.min(devicePixelRatio || 1, 2);
+    W = cv.clientWidth; H = cv.clientHeight; cv.width = W * dpr; cv.height = H * dpr;
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    var n = Math.round(Math.min(90, W * H / 14000));
+    bl = [];
+    for (var i = 0; i < n; i++) bl.push({ x: Math.random() * W, y: Math.random() * H, z: 0.3 + Math.random() * 1.2, s: 6 + Math.random() * 22, r: Math.random() * 6, vr: (Math.random() - .5) * .01, c: cols[i % cols.length] });
+  }
+  function cube(b, ox, oy) {
+    var s = b.s * b.z, x = b.x + ox * b.z, y = b.y + oy * b.z;
+    ctx.save(); ctx.translate(x, y); ctx.rotate(b.r);
+    ctx.globalAlpha = 0.25 + b.z * 0.35;
+    ctx.fillStyle = b.c; ctx.shadowColor = b.c; ctx.shadowBlur = 18 * b.z;
+    ctx.fillRect(-s / 2, -s / 2, s, s);
+    ctx.globalAlpha *= 0.6; ctx.fillStyle = '#000'; ctx.shadowBlur = 0;
+    ctx.fillRect(-s / 2, s / 6, s, s / 3);
+    ctx.restore();
+  }
+  function frame() {
+    ctx.clearRect(0, 0, W, H);
+    for (var i = 0; i < bl.length; i++) {
+      var b = bl[i];
+      if (!still) { b.y -= 0.25 * b.z; b.r += b.vr; if (b.y < -40) { b.y = H + 40; b.x = Math.random() * W; } }
+      cube(b, -mx * 30, -my * 20);
+    }
+  }
+  size(); frame();
+  addEventListener('resize', function () { size(); frame(); });
+  if (still) return;
+  addEventListener('pointermove', function (e) { mx = e.clientX / innerWidth - .5; my = e.clientY / innerHeight - .5; });
+  if ('IntersectionObserver' in window) new IntersectionObserver(function (es) { vis = es[0].isIntersecting; }).observe(cv);
+  (function loop() { requestAnimationFrame(loop); if (vis) frame(); })();
+})();
+
+/* Hermes: 명령 입력 → 텔레그램 답장, 반복 */
+(function () {
+  var term = document.getElementById('term'), me = document.getElementById('msg-me'), bot = document.getElementById('msg-bot');
+  var lines = [
+    ['c', '# 받아서 읽어 본 뒤 실행'],
+    ['p', 'bash install.sh --non-interactive'],
+    ['ok', '✓ Hermes Agent v0.23.2'],
+    ['p', 'hermes auth add openai-codex --browser'],
+    ['p', 'hermes gateway install --start-on-login'],
+    ['ok', '✓ telegram gateway running']
+  ];
+  function esc(s) { return s.replace(/&/g, '&amp;').replace(/</g, '&lt;'); }
+  function row(l, text) { return l[0] === 'p' ? '<span class="p">$</span> ' + esc(text) : '<span class="' + l[0] + '">' + esc(text) + '</span>'; }
+  function render(done, partial) {
+    var out = '';
+    for (var i = 0; i < done; i++) out += row(lines[i], lines[i][1]) + '\n';
+    if (partial != null) out += row(lines[done], partial) + '<span class="cur"></span>';
+    term.innerHTML = out;
+  }
+  render(lines.length); me.classList.remove('off'); bot.classList.remove('off');
+  if (still || !('IntersectionObserver' in window)) return;
+  var timer = null, running = false;
+  function wait(ms, f) { timer = setTimeout(f, ms); }
+  function run() {
+    me.classList.add('off'); bot.classList.add('off');
+    var i = 0;
+    (function nextLine() {
+      if (i >= lines.length) {
+        render(lines.length);
+        wait(700, function () { me.classList.remove('off'); wait(1500, function () { bot.classList.remove('off'); wait(3500, run); }); });
+        return;
+      }
+      var l = lines[i];
+      if (l[0] !== 'p') { i++; render(i, ''); wait(450, nextLine); return; }
+      var n = 0;
+      (function type() { render(i, l[1].slice(0, n)); if (n++ < l[1].length) wait(28, type); else { i++; wait(350, nextLine); } })();
+    })();
+  }
+  new IntersectionObserver(function (es) {
+    if (es[0].isIntersecting && !running) { running = true; clearTimeout(timer); run(); }
+    else if (!es[0].isIntersecting && running) { running = false; clearTimeout(timer); }
+  }, { threshold: 0.4 }).observe(document.getElementById('demo'));
+})();
+
+/* 빼빼로 베이스: 출력용 STL을 불러와 돌리기 */
+(function () {
+  var stage = document.getElementById('stage');
+  if (!window.THREE || !stage) return;
+  var COLORS = { body: 0xFF5C93, neck: 0x9A6240, biscuit: 0xE0AE6A, 'choco-orig': 0x4A2A1A, 'choco-almond': 0x5A3320, 'choco-white': 0xF7EFE2 };
+  fetch('model.json').then(function (r) { return r.json(); }).then(function (parts) {
+    var renderer;
+    try { renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true }); } catch (e) { return; }
+    renderer.setPixelRatio(Math.min(devicePixelRatio || 1, 2));
+    var scene = new THREE.Scene();
+    var cam = new THREE.PerspectiveCamera(32, 1, 1, 4000);
+    scene.add(new THREE.HemisphereLight(0xffffff, 0x502040, 0.8));
+    var sun = new THREE.DirectionalLight(0xffffff, 0.8); sun.position.set(200, 400, 300); scene.add(sun);
+    var rim = new THREE.DirectionalLight(0xFF4D8D, 0.7); rim.position.set(-300, 100, -300); scene.add(rim);
+    var model = new THREE.Group();
+    parts.forEach(function (p) {
+      var bin = atob(p.data), n = bin.length / 2, pos = new Float32Array(n);
+      for (var i = 0; i < n; i++) {
+        var q = bin.charCodeAt(2 * i) | (bin.charCodeAt(2 * i + 1) << 8), a = i % 3;
+        pos[i] = p.min[a] + q / 65535 * (p.max[a] - p.min[a]);
+      }
+      var g = new THREE.BufferGeometry();
+      g.setAttribute('position', new THREE.BufferAttribute(pos, 3));
+      g.computeVertexNormals();
+      var key = COLORS[p.name] !== undefined ? p.name : p.name.split('-')[0];
+      model.add(new THREE.Mesh(g, new THREE.MeshStandardMaterial({ color: COLORS[key], roughness: 0.55, metalness: 0.05 })));
+    });
+    model.position.set(0, -96, -55);
+    var tilt = new THREE.Group(); tilt.add(model); tilt.rotation.x = -Math.PI / 2;
+    var spin = new THREE.Group(); spin.add(tilt); scene.add(spin);
+    spin.rotation.x = 0.5;
+    cam.position.set(0, 0, 560); cam.lookAt(0, 0, 0);
+    document.getElementById('stage-fallback').hidden = true;
+    stage.appendChild(renderer.domElement);
+    function size() {
+      var w = stage.clientWidth, h = stage.clientHeight;
+      if (!w || !h) return;
+      renderer.setSize(w, h, false); cam.aspect = w / h;
+      cam.position.z = 150 / Math.sin(Math.atan(Math.min(1, cam.aspect) * Math.tan(16 * Math.PI / 180)));
+      cam.updateProjectionMatrix();
+    }
+    size(); addEventListener('resize', size);
+    var drag = null, visible = true, yaw = -0.6, t = 0;
+    stage.addEventListener('pointerdown', function (e) { drag = { x: e.clientX, y: e.clientY }; stage.setPointerCapture(e.pointerId); stage.style.cursor = 'grabbing'; });
+    stage.addEventListener('pointermove', function (e) {
+      if (!drag) return;
+      yaw += (e.clientX - drag.x) * 0.01;
+      spin.rotation.x = Math.max(-0.2, Math.min(1.3, spin.rotation.x + (e.clientY - drag.y) * 0.006));
+      drag = { x: e.clientX, y: e.clientY };
+    });
+    function end() { drag = null; stage.style.cursor = 'grab'; }
+    stage.addEventListener('pointerup', end); stage.addEventListener('pointercancel', end);
+    if ('IntersectionObserver' in window) new IntersectionObserver(function (es) { visible = es[0].isIntersecting; }).observe(stage);
+    (function loop() {
+      requestAnimationFrame(loop);
+      if (!visible) return;
+      if (!drag && !still) { yaw += 0.006; t += 0.016; }
+      spin.rotation.y = yaw;
+      spin.position.y = still ? 0 : Math.sin(t * 1.4) * 4;
+      renderer.render(scene, cam);
+    })();
+  }).catch(function () {});
+})();
+</script>
+
+</body>
+</html>
